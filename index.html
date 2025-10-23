@@ -4,10 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="./styles.css">
+
 
     <title>Document</title>
 </head>
 <body>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Pages</th>
+                <th>Read</th>
+                <th>ID</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        </tbody>
+    </table>
+
+    <button id="new-book">
+        New Book
+    </button>
+
+    <dialog>
+        <form action="">
+            <legend><h2>Enter Book</h2></legend>
+
+            <label for="title">Title</label>
+            <input id="title" name="title" type="text">
+
+            <label for="author">Author</label>
+            <input type="text" id="author" name="author">
+
+            <label for="pages">Pages</label>
+            <input type="text" id="pages" name="pages">
+
+            <label for="read">Read</label>
+            <input type="text" id="read" name="read">
+
+            <button id="enter">Enter</button>
+        </form>
+    </dialog>
     
 
     <script src="/javascript.js"></script>

@@ -1,4 +1,8 @@
 const myLibrary = [];
+const newBookButton = document.querySelector('#new-book');
+const dialog = document.querySelector('dialog');
+
+const form = document.querySelector('form');
 
 function Book(title, author, pages, read){
     this.title = title;
@@ -16,11 +20,41 @@ function addBooksToLibrary(title, author, pages, read){
 }
 
 function displayMyLibrary(){
-    for (let book in myLibrary){
+    const tableBody = document.querySelector('tbody');
+    tableBody.innerHTML = '';
+
+    for (let book of myLibrary){
+        console.log(book)
+        const newBook = document.createElement('tr');
+        tableBody.appendChild(newBook);
+
+        for (let value in book){
+            const newCell = document.createElement('td');
+            newCell.textContent = book[value];
+            newBook.appendChild(newCell);
+        }
+
         
     }
 }
 
-// addBooksToLibrary('sapeins', 'yoval', 123, true);
+newBookButton.addEventListener('click', () => dialog.showModal());
 
-// console.table(myLibrary);
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    const title = formData.get('title');
+    const author = formData.get('author');
+    const pages = formData.get('pages');
+    const read = formData.get('read');
+
+
+    addBooksToLibrary(title, author, pages, read);
+    displayMyLibrary();
+    dialog.close();
+});
+
+
+
