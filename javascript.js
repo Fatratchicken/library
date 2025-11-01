@@ -1,80 +1,87 @@
 // Dom elements
-let myLibrary = [];
-
 const newBookButton = document.querySelector('#new-book');
 const dialog = document.querySelector('dialog');
 const form = document.querySelector('form');
 const tableBody = document.querySelector('table tbody');
 
-Book.prototype.toggleRead = function(){
-    this.read = !this.read; //toggle it on and off
-}
+class Library{
+    static books = [];
 
-function Book(title, author, pages, read){
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = !!read; //force to boolean with !!
+    static addBooksToLibrary(Book){
+        this.books.push(Book);
+        this.renderLibrary();
+    }
 
-    this.id = crypto.randomUUID();
-}
+    static renderLibrary(){
+        tableBody.innerHTML = '';
 
-function addBooksToLibrary(title, author, pages, read){
-    const currentBook = new Book(title, author, pages, read);
+        for (const book of this.books){
+            const tr = document.createElement('tr');
+            tr.dataset.id = book.id;
 
-    myLibrary.push(currentBook);
-    renderLibrary();
-}
+            const titleTd = document.createElement('td');
+            titleTd.textContent = book.title;
+            tr.appendChild(titleTd);
 
-function renderLibrary(){
-    tableBody.innerHTML = '';
+            const authorTd = document.createElement('td');
+            authorTd.textContent = book.author;
+            tr.appendChild(authorTd);
 
-    for (const book of myLibrary){
-        const tr = document.createElement('tr');
-        tr.dataset.id = book.id;
+            const pagesTd = document.createElement('td');
+            pagesTd.textContent = book.pages;
+            tr.appendChild(pagesTd);
 
-        const titleTd = document.createElement('td');
-        titleTd.textContent = book.title;
-        tr.appendChild(titleTd);
+            const readTd = document.createElement('td');
+            const readText = document.createElement('span');
+            readText.textContent = book.read ? 'Yes' : 'No';
+            readText.className = 'read-text';
+            readTd.appendChild(readText);
 
-        const authorTd = document.createElement('td');
-        authorTd.textContent = book.author;
-        tr.appendChild(authorTd);
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'toggle-read';
+            toggleBtn.textContent = 'Toggle Read';
+            toggleBtn.dataset.id = book.id;
+            readTd.appendChild(toggleBtn);
 
-        const pagesTd = document.createElement('td');
-        pagesTd.textContent = book.pages;
-        tr.appendChild(pagesTd);
+            tr.appendChild(readTd);
 
-        const readTd = document.createElement('td');
-        const readText = document.createElement('span');
-        readText.textContent = book.read ? 'Yes' : 'No';
-        readText.className = 'read-text';
-        readTd.appendChild(readText);
+            const delTd = document.createElement('td');
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.className = 'del';
+            delBtn.textContent = 'Delete';
+            delBtn.dataset.id = book.id;
+            delTd.appendChild(delBtn);
+            tr.appendChild(delTd);
 
-        const toggleBtn = document.createElement('button');
-        toggleBtn.type = 'button';
-        toggleBtn.className = 'toggle-read';
-        toggleBtn.textContent = 'Toggle Read';
-        toggleBtn.dataset.id = book.id;
-        readTd.appendChild(toggleBtn);
+            tableBody.appendChild(tr);
 
-        tr.appendChild(readTd);
 
-        const delTd = document.createElement('td');
-        const delBtn = document.createElement('button');
-        delBtn.type = 'button';
-        delBtn.className = 'del';
-        delBtn.textContent = 'Delete';
-        delBtn.dataset.id = book.id;
-        delTd.appendChild(delBtn);
-        tr.appendChild(delTd);
-
-        tableBody.appendChild(tr);
-
+        }
 
     }
 
+
+
 }
+
+class Book{
+    constructor(title, author, pages, read){
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = !!read;
+
+        this.id = crypto.randomUUID();
+    }
+
+    toggleRead(){
+        this.read = !this.read;
+    }
+
+}
+
 
 //event listeners
 newBookButton.addEventListener('click', () => dialog.showModal());
@@ -89,7 +96,9 @@ form.addEventListener('submit', (event) => {
     const pages = formData.get('pages')?.trim() || '0';
     const read = formData.get('read') ? true : false;
 
-    addBooksToLibrary(title, author, pages, read);
+    const book = new Book (title, author, pages, read);
+
+    Library.addBooksToLibrary(book);
     form.reset();
     dialog.close();
 })
@@ -100,18 +109,18 @@ tableBody.addEventListener('click', (event) => {
     if (target.matches('.del')) {
         const id = target.dataset.id;
 
-        myLibrary = myLibrary.filter(b => b.id !== id);
-        renderLibrary();
+        Library.books = Library.books.filter(b => b.id !== id);
+        Library.renderLibrary();
         return;
     }
 
     if (target.matches('.toggle-read')) {
         const id = target.dataset.id;
-        const book = myLibrary.find(b => b.id === id);
+        const book = Library.books.find(b => b.id === id);
 
         if (book) {
             book.toggleRead();
-            renderLibrary();
+            Library.renderLibrary();
         }
 
     return;
@@ -120,5 +129,5 @@ tableBody.addEventListener('click', (event) => {
 
 })
   
-renderLibrary();
+Library.renderLibrary();
 
