@@ -88,8 +88,30 @@ class Book{
 //event listeners
 newBookButton.addEventListener('click', () => dialog.showModal());
 
+const titleInput = document.getElementById('title');
+
+titleInput.addEventListener('input', () => {
+    if (!titleInput.value.trim()){
+        titleInput.setCustomValidity("The title  must be filled!");
+        titleInput.reportValidity();
+        return;
+    }
+
+    else{
+        titleInput.setCustomValidity("");
+    }
+});
+
 form.addEventListener('submit', (event) => {
     event.preventDefault();
+
+    titleInput.setCustomValidity("");
+
+    if (!titleInput.value.trim()){
+        titleInput.setCustomValidity("The title  must be filled!");
+        titleInput.reportValidity();
+        return;
+    }
 
     const formData = new FormData(form);
 
