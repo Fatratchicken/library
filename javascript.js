@@ -46,6 +46,10 @@ class Library{
 
             tr.appendChild(readTd);
 
+            const idTd = document.createElement('td');
+            idTd.textContent = book.id;
+            tr.appendChild(idTd);
+
             const delTd = document.createElement('td');
             const delBtn = document.createElement('button');
             delBtn.type = 'button';
